@@ -150,7 +150,6 @@ p:last-child { margin-bottom: 0; }
 }
 .btn-consent.active:active { transform: translateY(0); }
 
-/* 同意しない場合のエリア */
 .no-consent-area {
   display: none;
   margin-top: 20px;
@@ -195,7 +194,6 @@ p:last-child { margin-bottom: 0; }
   padding-bottom: 20px;
 }
 
-/* modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -237,7 +235,6 @@ p:last-child { margin-bottom: 0; }
     <p>病院スタッフからのアイデア収集手法の最適化を目的とした研究です</p>
   </div>
 
-  <!-- 研究の目的 -->
   <div class="card">
     <h2><span class="section-icon">📋</span>研究の目的と概要</h2>
     <p>本研究は、病院スタッフが医療改善のアイデアやお困りごとをより効果的に提案できるフォームのあり方を検討することを目的としています。</p>
@@ -245,38 +242,18 @@ p:last-child { margin-bottom: 0; }
     <p>得られたデータは医療機器開発部門における提案制度の改善に活用される予定です。</p>
   </div>
 
-  <!-- 研究の詳細 -->
   <div class="card">
     <h2><span class="section-icon">ℹ️</span>研究の詳細</h2>
     <table class="info-table">
-      <tr>
-        <th>研究担当者</th>
-        <td>医療機器開発担当スタッフ</td>
-      </tr>
-      <tr>
-        <th>対象者</th>
-        <td>病院スタッフ（職種不問）</td>
-      </tr>
-      <tr>
-        <th>参加方法</th>
-        <td>Webフォームへの入力（1回のみ）</td>
-      </tr>
-      <tr>
-        <th>所要時間</th>
-        <td>約5〜15分</td>
-      </tr>
-      <tr>
-        <th>データの取り扱い</th>
-        <td>入力内容は匿名化して分析します。個人が特定される情報は収集しません</td>
-      </tr>
-      <tr>
-        <th>参加の任意性</th>
-        <td>参加は任意です。途中で中止しても不利益は生じません</td>
-      </tr>
+      <tr><th>研究担当者</th><td>医療機器開発担当スタッフ</td></tr>
+      <tr><th>対象者</th><td>病院スタッフ（職種不問）</td></tr>
+      <tr><th>参加方法</th><td>Webフォームへの入力（1回のみ）</td></tr>
+      <tr><th>所要時間</th><td>約5〜15分</td></tr>
+      <tr><th>データの取り扱い</th><td>入力内容は匿名化して分析します。個人が特定される情報は収集しません</td></tr>
+      <tr><th>参加の任意性</th><td>参加は任意です。途中で中止しても不利益は生じません</td></tr>
     </table>
   </div>
 
-  <!-- 倫理的配慮 -->
   <div class="card">
     <h2><span class="section-icon">🛡️</span>倫理的配慮</h2>
     <p>本研究は、個人情報保護法および関連する倫理指針を遵守して実施します。</p>
@@ -284,7 +261,6 @@ p:last-child { margin-bottom: 0; }
     <p>研究に関するご質問は、担当者までお気軽にお問い合わせください。</p>
   </div>
 
-  <!-- 同意取得 -->
   <div class="card">
     <h2><span class="section-icon">✅</span>研究参加への同意</h2>
     <div class="consent-box">
@@ -303,10 +279,9 @@ p:last-child { margin-bottom: 0; }
       研究に参加してフォームへ進む <span class="btn-arrow">→</span>
     </button>
 
-    <!-- 同意しない場合 -->
     <div class="no-consent-area" id="noConsentArea">
       <p>研究への参加に同意されない場合も、通常のアイデア提案フォームからご意見をお寄せいただけます。</p>
-      <a class="btn-base" href="https://morikawa001.github.io/idea_test_base/" target="_blank">
+      <a class="btn-base" href="https://morikawa001.github.io/idea_test_base/" onclick="sendLog('no_consent', 0, 'base')">
         研究に参加せずフォームへ進む <span class="btn-arrow">→</span>
       </a>
     </div>
@@ -317,7 +292,6 @@ p:last-child { margin-bottom: 0; }
   </div>
 </div>
 
-<!-- 移動中モーダル -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="spinner"></div>
@@ -327,6 +301,44 @@ p:last-child { margin-bottom: 0; }
 </div>
 
 <script>
+// ============================================================
+// GAS トラッキング設定
+// ============================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbym7HeLAHQrwLjebH0OCZnBcqpmvyP2ZcMS235f_myvtuqvqVy9J7xj6I7FyB4KnMFF/exec';
+
+// セッションID：ページを開くたびにユニークなIDを生成
+const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+// GASへデータを送信する関数
+function sendLog(status, step, formType) {
+  var payload = {
+    timestamp:  new Date().toISOString(),
+    form_type:  formType,
+    last_step:  step,
+    status:     status,
+    session_id: SESSION_ID
+  };
+  fetch(GAS_URL, {
+    method:    'POST',
+    body:      JSON.stringify(payload),
+    keepalive: true
+  }).catch(function() {});
+}
+
+// ページを開いた瞬間に「訪問」を記録
+sendLog('visited', 0, 'landing');
+
+// ページを離れるとき（タブ切り替え・閉じる）に離脱を記録
+var consentDone = false;
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && !consentDone) {
+    sendLog('abandoned_landing', 0, 'landing');
+  }
+});
+
+// ============================================================
+// フォーム動作
+// ============================================================
 const FORM_URLS = [
   'https://morikawa001.github.io/idea_test/',
   'https://morikawa001.github.io/idea_test2/'
@@ -339,16 +351,15 @@ function toggleConsent() {
 }
 
 function handleConsent() {
-  const cb = document.getElementById('consentCheck');
-  const btn = document.getElementById('startBtn');
-  const noConsent = document.getElementById('noConsentArea');
-
+  const cb     = document.getElementById('consentCheck');
+  const btn    = document.getElementById('startBtn');
+  const noArea = document.getElementById('noConsentArea');
   if (cb.checked) {
     btn.classList.add('active');
-    noConsent.classList.remove('show');
+    noArea.classList.remove('show');
   } else {
     btn.classList.remove('active');
-    noConsent.classList.add('show');
+    noArea.classList.add('show');
   }
 }
 
@@ -356,13 +367,17 @@ function goToForm() {
   const cb = document.getElementById('consentCheck');
   if (!cb.checked) return;
 
-  const idx = Math.floor(Math.random() * FORM_URLS.length);
+  const idx       = Math.floor(Math.random() * FORM_URLS.length);
   const targetUrl = FORM_URLS[idx];
+  const formType  = (idx === 0) ? 'A' : 'B';
+
+  consentDone = true;
+  sendLog('consented', 0, 'landing');
+  sendLog('redirected', 0, formType);
 
   document.getElementById('modalOverlay').classList.add('show');
-
   setTimeout(function() {
-    window.location.href = targetUrl;
+    window.location.href = targetUrl + '?sid=' + SESSION_ID + '&ft=' + formType;
   }, 1200);
 }
 </script>
