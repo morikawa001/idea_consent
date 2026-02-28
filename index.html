@@ -151,7 +151,7 @@ p:last-child { margin-bottom: 0; }
 .btn-consent.active:active { transform: translateY(0); }
 
 .no-consent-area {
-  display: none;
+  display: block; 
   margin-top: 20px;
   padding: 18px 20px;
   background: #fafafa;
@@ -159,7 +159,7 @@ p:last-child { margin-bottom: 0; }
   border-radius: 12px;
   text-align: center;
 }
-.no-consent-area.show { display: block; }
+.no-consent-area.hide { display: none; }  
 .no-consent-area p {
   font-size: 0.88rem;
   color: #666;
@@ -356,10 +356,10 @@ function handleConsent() {
   const noArea = document.getElementById('noConsentArea');
   if (cb.checked) {
     btn.classList.add('active');
-    noArea.classList.remove('show');
+    noArea.classList.add('hide'); 
   } else {
     btn.classList.remove('active');
-    noArea.classList.add('show');
+    noArea.classList.remove('hide'); 
   }
 }
 
