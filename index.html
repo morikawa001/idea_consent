@@ -150,14 +150,42 @@ p:last-child { margin-bottom: 0; }
 }
 .btn-consent.active:active { transform: translateY(0); }
 
-.btn-arrow { margin-left: 8px; }
-
-.note {
+/* 同意しない場合のエリア */
+.no-consent-area {
+  display: none;
+  margin-top: 20px;
+  padding: 18px 20px;
+  background: #fafafa;
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
   text-align: center;
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 12px;
 }
+.no-consent-area.show { display: block; }
+.no-consent-area p {
+  font-size: 0.88rem;
+  color: #666;
+  margin-bottom: 14px;
+}
+.btn-base {
+  display: inline-block;
+  padding: 12px 28px;
+  background: white;
+  color: #555;
+  border: 1.5px solid #bbb;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-base:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #333;
+}
+
+.btn-arrow { margin-left: 8px; }
 
 .footer {
   text-align: center;
@@ -187,7 +215,6 @@ p:last-child { margin-bottom: 0; }
   text-align: center;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
 }
-.modal-icon { font-size: 2.4rem; margin-bottom: 12px; }
 .modal h3 { font-size: 1.1rem; color: #2d7a5f; margin-bottom: 10px; }
 .modal p { font-size: 0.88rem; color: #555; line-height: 1.7; margin-bottom: 20px; }
 .modal .spinner {
@@ -214,7 +241,7 @@ p:last-child { margin-bottom: 0; }
   <div class="card">
     <h2><span class="section-icon">📋</span>研究の目的と概要</h2>
     <p>本研究は、病院スタッフが医療改善のアイデアやお困りごとをより効果的に提案できるフォームのあり方を検討することを目的としています。</p>
-    <p>参加者には、アイデア提案フォームへの入力をお願いします。フォームの種類はランダムに割り当てられ、入力に要した時間や内容の構造性などを分析します。</p>
+    <p>参加者には、アイデア提案フォームへの入力をお願いします。入力に要した時間や内容の構造性などを分析します。</p>
     <p>得られたデータは医療機器開発部門における提案制度の改善に活用される予定です。</p>
   </div>
 
@@ -246,10 +273,6 @@ p:last-child { margin-bottom: 0; }
         <th>参加の任意性</th>
         <td>参加は任意です。途中で中止しても不利益は生じません</td>
       </tr>
-      <tr>
-        <th>フォームの割り当て</th>
-        <td>2種類のフォームをランダムに割り当てます（A/Bテスト方式）</td>
-      </tr>
     </table>
   </div>
 
@@ -269,7 +292,6 @@ p:last-child { margin-bottom: 0; }
       <p>・研究の目的と方法について説明を受け、理解しました</p>
       <p>・参加は任意であり、いつでも中止できることを理解しました</p>
       <p>・入力データが匿名化され、研究目的にのみ使用されることに同意します</p>
-      <p>・フォームがランダムに割り当てられることを理解しました</p>
     </div>
 
     <div class="checkbox-area" onclick="toggleConsent()">
@@ -278,9 +300,16 @@ p:last-child { margin-bottom: 0; }
     </div>
 
     <button class="btn-consent" id="startBtn" onclick="goToForm()">
-      フォームへ進む <span class="btn-arrow">→</span>
+      研究に参加してフォームへ進む <span class="btn-arrow">→</span>
     </button>
-    <p class="note">※ ボタンを押すと、2種類のフォームのうちいずれかにランダムで移動します</p>
+
+    <!-- 同意しない場合 -->
+    <div class="no-consent-area" id="noConsentArea">
+      <p>研究への参加に同意されない場合も、通常のアイデア提案フォームからご意見をお寄せいただけます。</p>
+      <a class="btn-base" href="https://morikawa001.github.io/idea_test_base/" target="_blank">
+        研究に参加せずフォームへ進む <span class="btn-arrow">→</span>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -312,10 +341,14 @@ function toggleConsent() {
 function handleConsent() {
   const cb = document.getElementById('consentCheck');
   const btn = document.getElementById('startBtn');
+  const noConsent = document.getElementById('noConsentArea');
+
   if (cb.checked) {
     btn.classList.add('active');
+    noConsent.classList.remove('show');
   } else {
     btn.classList.remove('active');
+    noConsent.classList.add('show');
   }
 }
 
@@ -323,14 +356,11 @@ function goToForm() {
   const cb = document.getElementById('consentCheck');
   if (!cb.checked) return;
 
-  // ランダムにA or Bを選択
   const idx = Math.floor(Math.random() * FORM_URLS.length);
   const targetUrl = FORM_URLS[idx];
 
-  // モーダル表示
   document.getElementById('modalOverlay').classList.add('show');
 
-  // 1.2秒後に移動（UX向上のため少し待機）
   setTimeout(function() {
     window.location.href = targetUrl;
   }, 1200);
