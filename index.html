@@ -339,7 +339,7 @@ document.addEventListener('visibilitychange', function() {
 // ============================================================
 const FORM_URLS = {
   A: 'https://morikawa001.github.io/idea_test/',       // A群：PICO型
-  B: 'https://morikawa001.github.io/idea_test2/',      // B群：非構造化型
+  B: 'https://morikawa001.github.io/idea_test2/',      // B群：非構造化型　→　調査しない
   C: 'https://morikawa001.github.io/idea_test_base/',  // C群：従来型（研究参加・同意あり）
   D: 'https://morikawa001.github.io/idea_test_base0/'   // D群：従来型（研究外・同意なし）
 };
@@ -367,14 +367,14 @@ function handleConsent() {
 }
 
 // ============================================================
-// 同意あり：A/B/C群にランダム割付して遷移
+// 同意あり：A/C群にランダム割付して遷移　年間症例数が10件程度なので、介入群：A　対象群：Cとして2群比較に変更
 // ============================================================
 function goToForm() {
   const cb = document.getElementById('consentCheck');
   if (!cb.checked) return;
 
-  // A・B・C群に均等ランダム割付
-  const groups   = ['A', 'B', 'C'];
+  // A・C群に均等ランダム割付
+  const groups   = ['A', 'C'];
   const formType = groups[Math.floor(Math.random() * groups.length)];
   const targetUrl = FORM_URLS[formType];
 
