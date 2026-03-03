@@ -275,15 +275,17 @@ p:last-child { margin-bottom: 0; }
       <label for="consentCheck">上記の内容を読み、理解した上で研究への参加に<strong>同意します</strong></label>
     </div>
 
+    <!-- 同意あり：A/B/C群ランダム割付 -->
     <button class="btn-consent" id="startBtn" onclick="goToForm()">
       研究に参加してフォームへ進む <span class="btn-arrow">→</span>
     </button>
 
+    <!-- 同意なし：D群（通常運用フォーム）へ誘導 -->
     <div class="no-consent-area" id="noConsentArea">
       <p>研究への参加に同意されない場合も、通常のアイデア提案フォームからご意見をお寄せいただけます。</p>
-      <a class="btn-base" href="https://morikawa001.github.io/idea_test_base/" onclick="sendLog('no_consent', 0, 'base')">
+      <button class="btn-base" onclick="goToFormD()">
         研究に参加せずフォームへ進む <span class="btn-arrow">→</span>
-      </a>
+      </button>
     </div>
   </div>
 
@@ -296,7 +298,7 @@ p:last-child { margin-bottom: 0; }
   <div class="modal">
     <div class="spinner"></div>
     <h3>フォームへ移動しています</h3>
-    <p>ご参加ありがとうございます。<br>フォームを読み込んでいます…</p>
+    <p id="modalMsg">ご参加ありがとうございます。<br>フォームを読み込んでいます…</p>
   </div>
 </div>
 
@@ -306,10 +308,8 @@ p:last-child { margin-bottom: 0; }
 // ============================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx5Cf97A3SUGcfb8F3l87unhhSgjoo7TGZ1ozyRdk2JFGlxmJF9SxQN06QtjtJbJ5RV/exec';
 
-// セッションID：ページを開くたびにユニークなIDを生成
 const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
-// GASへデータを送信する関数
 function sendLog(status, step, formType) {
   var payload = {
     timestamp:  new Date().toISOString(),
@@ -325,10 +325,8 @@ function sendLog(status, step, formType) {
   }).catch(function() {});
 }
 
-// ページを開いた瞬間に「訪問」を記録
 sendLog('visited', 0, 'landing');
 
-// ページを離れるとき（タブ切り替え・閉じる）に離脱を記録
 var consentDone = false;
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'hidden' && !consentDone) {
@@ -337,13 +335,18 @@ document.addEventListener('visibilitychange', function() {
 });
 
 // ============================================================
-// フォーム動作
+// フォームURL定義
 // ============================================================
-const FORM_URLS = [
-  'https://morikawa001.github.io/idea_test/',
-  'https://morikawa001.github.io/idea_test2/'
-];
+const FORM_URLS = {
+  A: 'https://morikawa001.github.io/idea_test/',       // A群：PICO型
+  B: 'https://morikawa001.github.io/idea_test2/',      // B群：非構造化型
+  C: 'https://morikawa001.github.io/idea_test_base/',  // C群：従来型（研究参加・同意あり）
+  D: 'https://morikawa001.github.io/idea_test_base/'   // D群：従来型（研究外・同意なし）
+};
 
+// ============================================================
+// UI制御
+// ============================================================
 function toggleConsent() {
   const cb = document.getElementById('consentCheck');
   cb.checked = !cb.checked;
@@ -356,28 +359,52 @@ function handleConsent() {
   const noArea = document.getElementById('noConsentArea');
   if (cb.checked) {
     btn.classList.add('active');
-    noArea.classList.add('hide'); 
+    noArea.classList.add('hide');
   } else {
     btn.classList.remove('active');
-    noArea.classList.remove('hide'); 
+    noArea.classList.remove('hide');
   }
 }
 
+// ============================================================
+// 同意あり：A/B/C群にランダム割付して遷移
+// ============================================================
 function goToForm() {
   const cb = document.getElementById('consentCheck');
   if (!cb.checked) return;
 
-  const idx       = Math.floor(Math.random() * FORM_URLS.length);
-  const targetUrl = FORM_URLS[idx];
-  const formType  = (idx === 0) ? 'A' : 'B';
+  // A・B・C群に均等ランダム割付
+  const groups   = ['A', 'B', 'C'];
+  const formType = groups[Math.floor(Math.random() * groups.length)];
+  const targetUrl = FORM_URLS[formType];
 
   consentDone = true;
   sendLog('consented', 0, 'landing');
   sendLog('redirected', 0, formType);
 
+  document.getElementById('modalMsg').innerHTML =
+    'ご参加ありがとうございます。<br>フォームを読み込んでいます…';
   document.getElementById('modalOverlay').classList.add('show');
+
   setTimeout(function() {
-    window.location.href = targetUrl + '?sid=' + SESSION_ID + '&ft=' + formType;
+    window.location.href = targetUrl + '?sid=' + SESSION_ID + '&ft=' + formType + '&consent=1';
+  }, 1200);
+}
+
+// ============================================================
+// 同意なし：D群（通常運用フォーム）へ誘導
+// ============================================================
+function goToFormD() {
+  consentDone = true;
+  sendLog('no_consent', 0, 'D');
+  sendLog('redirected', 0, 'D');
+
+  document.getElementById('modalMsg').innerHTML =
+    'フォームへ移動しています。<br>そのままお待ちください…';
+  document.getElementById('modalOverlay').classList.add('show');
+
+  setTimeout(function() {
+    window.location.href = FORM_URLS['D'] + '?sid=' + SESSION_ID + '&ft=D&consent=0';
   }, 1200);
 }
 </script>
