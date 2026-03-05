@@ -298,11 +298,6 @@ p:last-child { margin-bottom: 0; }
     </div>
   </div>  ← ここで .card を正しく閉じる（この1つだけ）
 
-    <div class="checkbox-area" onclick="toggleConsent()">
-      <input type="checkbox" id="consentCheck" onchange="handleConsent()" onclick="event.stopPropagation()">
-      <label for="consentCheck">上記の内容を読み、理解した上で研究への参加に<strong>同意します</strong></label>
-    </div>
-
     <!-- 同意あり：A/B/C群ランダム割付 -->
     <button class="btn-consent" id="startBtn" onclick="goToForm()">
       研究に参加してフォームへ進む <span class="btn-arrow">→</span>
