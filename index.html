@@ -373,8 +373,8 @@ function goToForm() {
   const cb = document.getElementById('consentCheck');
   if (!cb.checked) return;
 
-  // A・C群に均等ランダム割付
-  const groups   = ['A', 'C'];
+  // A・C群に均等ランダム割付は第Ⅱ相以降で計画その際に['A'];を['A', 'C'];に変更
+  const groups   = ['A'];　
   const formType = groups[Math.floor(Math.random() * groups.length)];
   const targetUrl = FORM_URLS[formType];
 
