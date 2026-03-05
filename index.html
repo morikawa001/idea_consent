@@ -268,35 +268,35 @@ p:last-child { margin-bottom: 0; }
   <p>研究に関するご質問は、担当者までお気軽にお問い合わせください。</p>
 </div>
 
-  <div class="card">
-  <h2><span class="section-icon">✅</span>研究参加への同意</h2>
-  <div class="consent-box">
-    <p>フォームへ進む前に、以下の内容をご確認ください。</p>
-    <p>・研究の目的と方法について説明を受け、理解しました</p>
-    <p>・参加は任意であり、いつでも中止できることを理解しました</p>
-    <p>・フォームの入力内容およびアンケート回答が、匿名化され研究目的にのみ使用されることに同意します</p>
-    <p>・入力を途中で中止した場合も、<strong>中止までのステップ別操作ログ（個人を特定できる情報を含まない）</strong>がフォーム改善を目的とした研究に使用される場合があることに同意します</p>
-    <p>・所要時間は<strong>約10〜15分</strong>（フォーム入力＋アンケート回答）であることを確認しました</p>
-  </div>
+    <div class="card">
+    <h2><span class="section-icon">✅</span>研究参加への同意</h2>
+    <div class="consent-box">
+      <p>フォームへ進む前に、以下の内容をご確認ください。</p>
+      <p>・研究の目的と方法について説明を受け、理解しました</p>
+      <p>・参加は任意であり、いつでも中止できることを理解しました</p>
+      <p>・フォームの入力内容およびアンケート回答が、匿名化され研究目的にのみ使用されることに同意します</p>
+      <p>・入力を途中で中止した場合も、<strong>中止までのステップ別操作ログ（個人を特定できる情報を含まない）</strong>がフォーム改善を目的とした研究に使用される場合があることに同意します</p>
+      <p>・所要時間は<strong>約10〜15分</strong>（フォーム入力＋アンケート回答）であることを確認しました</p>
+    </div>
 
-  <div class="checkbox-area" onclick="toggleConsent()">
-    <input type="checkbox" id="consentCheck" onchange="handleConsent()" onclick="event.stopPropagation()">
-    <label for="consentCheck">上記の内容を読み、理解した上で研究への参加に<strong>同意します</strong></label>
-  </div>
+    <div class="checkbox-area" onclick="toggleConsent()">
+      <input type="checkbox" id="consentCheck" onchange="handleConsent()" onclick="event.stopPropagation()">
+      <label for="consentCheck">上記の内容を読み、理解した上で研究への参加に<strong>同意します</strong></label>
+    </div>
 
-  <!-- 同意あり：A群フォームへ遷移 -->
-  <button class="btn-consent" id="startBtn" onclick="goToForm()">
-    研究に参加してフォームへ進む <span class="btn-arrow">→</span>
-  </button>
-
-  <!-- 同意なし：D群（通常運用フォーム）へ誘導 -->
-  <div class="no-consent-area" id="noConsentArea">
-    <p>研究への参加に同意されない場合も、通常のアイデア提案フォームからご意見をお寄せいただけます。</p>
-    <button class="btn-base" onclick="goToFormD()">
-      研究に参加せずフォームへ進む <span class="btn-arrow">→</span>
+    <!-- 同意あり：A群フォームへ遷移 -->
+    <button class="btn-consent" id="startBtn" onclick="goToForm()">
+      研究に参加してフォームへ進む <span class="btn-arrow">→</span>
     </button>
-  </div>
-</div>
+
+    <!-- 同意なし：D群（通常運用フォーム）へ誘導 -->
+    <div class="no-consent-area" id="noConsentArea">
+      <p>研究への参加に同意されない場合も、通常のアイデア提案フォームからご意見をお寄せいただけます。</p>
+      <button class="btn-base" onclick="goToFormD()">
+        研究に参加せずフォームへ進む <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>  ← ここで .card を正しく閉じる（この1つだけ）
 
     <div class="checkbox-area" onclick="toggleConsent()">
       <input type="checkbox" id="consentCheck" onchange="handleConsent()" onclick="event.stopPropagation()">
