@@ -51,13 +51,13 @@ function toggleConsent() {
 function handleConsent() {
   const cb     = document.getElementById('consentCheck');
   const btn    = document.getElementById('startBtn');
-  const noArea = document.getElementById('noConsentArea');
+  //const noArea = document.getElementById('noConsentArea');
   if (cb.checked) {
     btn.classList.add('active');
-    noArea.classList.add('hide');
+    //noArea.classList.add('hide');
   } else {
     btn.classList.remove('active');
-    noArea.classList.remove('hide');
+    //noArea.classList.remove('hide');
   }
 }
 
