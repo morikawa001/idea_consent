@@ -144,7 +144,7 @@ p:last-child { margin-bottom: 0; }
 .btn-consent.active:active { transform: translateY(0); }
 
 .no-consent-area {
-  display: none; //第Ⅱ相ではこのコードをコメントアウト
+  display: none; /*第Ⅱ相ではこのコードをコメントアウト*/
   margin-top: 20px;
   padding: 18px 20px;
   background: #fafafa;
