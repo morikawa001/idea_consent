@@ -33,7 +33,7 @@ document.addEventListener('visibilitychange', function() {
 // フォームURL定義
 // ============================================================
 const FORM_URLS = {
-  A: 'https://morikawa001.github.io/idea_test/',       // A群：PICO型
+  A: 'https://morikawa001.github.io/idea_form/',       // A群：PICO型
   B: 'https://morikawa001.github.io/idea_test2/',      // B群：非構造化型　→　調査しない
   C: 'https://morikawa001.github.io/idea_test_base/',  // C群：従来型（研究参加・同意あり）
   D: 'https://morikawa001.github.io/idea_test_base0/'  // D群：従来型（研究外・同意なし）
